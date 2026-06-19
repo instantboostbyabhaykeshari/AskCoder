@@ -1,11 +1,16 @@
 .search-frame {
-  width: 220px;
-  //float: right;
+  width: 240px;
+  position: relative;
 }
 
 .search-box:focus {
-  border-color: #2b5f8a;
-  box-shadow: 0 0 0 4px #378ad326;
-  color: #fff;
+  border-color: var(--ac-link);
+  box-shadow: 0 0 0 3px rgba(0, 116, 204, 0.15);
   outline: 0;
+}
+
+@media (max-width: 520px) {
+  .search-frame {
+    width: 100%;
+  }
 }

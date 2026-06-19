@@ -1,8 +1,11 @@
+'use client';
+
 import React, {Fragment} from 'react';
 
 import SideBar from './SideBar/SideBar.component';
 import RightSideBar from './RightSideBar/RightSideBar.component';
 import Footer from "../Footer/Footer.component";
+
 
 const LayoutWrapper = ({ children }) => {
   return (

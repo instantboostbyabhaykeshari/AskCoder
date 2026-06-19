@@ -1,13 +1,14 @@
+'use client';
+
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link } from "../../../../next/nextRouterAdapter.js";
 import { deletePost } from "../../../../redux/posts/posts.actions";
 
 import TagBadge from "../../../../components/molecules/TagBadge/TagBadge.component";
 import UserCard from "../../../../components/molecules/UserCard/UserCard.component";
 
-import "./PostCell.styles.scss";
 import censorBadWords from "../../../../utils/censorBadWords";
 
 const PostCell = ({

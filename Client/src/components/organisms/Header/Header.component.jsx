@@ -1,138 +1,111 @@
+'use client';
+
 import React, {Fragment, useState} from 'react';
-import {Link, useHistory} from 'react-router-dom';
+import {Link, useHistory} from '../../../next/nextRouterAdapter.js';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import { logout } from '../../../redux/auth/auth.actions';
+import {logout} from '../../../redux/auth/auth.actions';
 
 import {ReactComponent as Search} from '../../../assets/Search.svg';
-import {ReactComponent as Logo} from '../../../assets/LogoMd.svg';
-import {ReactComponent as SmallLogo} from '../../../assets/LogoGlyphMd.svg';
+import AskCoderLogo from '../../atoms/AskCoderLogo/AskCoderLogo.component';
 import Spinner from '../../molecules/Spinner/Spinner.component';
 import LinkButton from '../../molecules/LinkButton/LinkButton.component';
 import MobileSideBar from '../../organisms/MobileSideBar/MobileSideBar.component';
 
-import './Header.styles.scss';
-
 const Header = ({auth: {isAuthenticated, loading, user}, logout}) => {
-  let history = useHistory();
-  const [searchState, setSearchState] = useState(false);
+  const history = useHistory();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const query = searchQuery.trim();
+    history.push(query ? `/questions?search=${encodeURIComponent(query)}` : '/questions');
+    setSearchOpen(false);
+  };
 
   const authLinks = (
-    <div className='btns'>
+    <div className='header-actions'>
       {loading || user === null ? (
-        <Spinner width='50px' height='50px' />
+        <Spinner width='32px' height='32px' />
       ) : (
-        <Link to={`/users/${user.id}`} title={user.username}>
-          <img
-            alt='user-logo'
-            className='logo'
-            src={user.gravatar}
-          />
+        <Link
+          to={`/users/${user.id}`}
+          title='View profile and update username or password'
+          className='header-profile-link'
+        >
+          <img alt='user avatar' className='header-avatar' src={user.gravatar} />
+          <span className='header-username'>{user.username}</span>
         </Link>
       )}
       <LinkButton
-        text={'Log out'}
-        link={'/login'}
-        type={'s-btn__filled'}
+        text='Log out'
+        link='/login'
+        type='s-btn__filled'
         handleClick={logout}
       />
     </div>
   );
 
-  const authTabs = (
-    <div className='s-navigation'>
-      <Link to='/' className='s-navigation--item is-selected'>
-        Products
-      </Link>
-    </div>
-  );
-
-  const guestTabs = (
-    <div className='s-navigation'>
-      <Link to='/' className='s-navigation--item is-selected'>
-        Products
-      </Link>
-      <Link to='/' className='s-navigation--item not-selected'>
-        Customers
-      </Link>
-      <Link to='/' className='s-navigation--item not-selected'>
-        Use cases
-      </Link>
-    </div>
-  );
-
   const guestLinks = (
-    <div className='btns'>
-      <LinkButton text={'Log in'} link={'/login'} type={'s-btn__primary'} />
-      <LinkButton text={'Sign up'} link={'/register'} type={'s-btn__filled'} />
+    <div className='header-actions'>
+      <LinkButton text='Log in' link='/login' type='s-btn__filled' />
+      <LinkButton text='Sign up' link='/register' type='s-btn__primary' />
     </div>
   );
 
-  const SearchBar = () => {
-    return (
-      <form
-        onSubmit={() => history.push('/questions')}
-        className='small-search-form'
-        autoComplete='off'
-      >
+  return loading ? null : (
+    <Fragment>
+      <header className='ac-header'>
+        <div className='ac-header__inner'>
+          <div className='ac-header__left'>
+            <div className='hamburger'>
+              <MobileSideBar hasOverlay />
+            </div>
+            <Link className='ac-header__brand' to='/'>
+              <AskCoderLogo width={140} className='full-logo' priority />
+              <AskCoderLogo width={110} className='glyph-logo' />
+            </Link>
+          </div>
+
+          <form className='ac-header__search' onSubmit={handleSearch} autoComplete='off'>
+            <Search className='ac-header__search-icon' />
+            <input
+              className='s-input s-input__search ac-header__search-input'
+              type='text'
+              name='search'
+              maxLength='100'
+              placeholder='Search questions...'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </form>
+
+          <div className='ac-header__right'>
+            <Search
+              className='search-icon'
+              onClick={() => setSearchOpen(!searchOpen)}
+            />
+            {!loading && (isAuthenticated ? authLinks : guestLinks)}
+          </div>
+        </div>
+      </header>
+
+      {searchOpen && (
+        <form className='small-search-form' onSubmit={handleSearch} autoComplete='off'>
           <input
-            className='small-search'
-            autoComplete='off'
+            className='small-search s-input'
             type='text'
             name='search'
-            maxLength='35'
-            placeholder='Search...'
+            maxLength='100'
+            placeholder='Search questions...'
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            autoFocus
           />
-          <Search className="small-search-icon" />
-      </form>
-    );
-  }
-
-
-  return loading ? (
-    ''
-  ) : (
-    <Fragment>
-      <nav className='navbar fixed-top navbar-expand-lg navbar-light bs-md'>
-        <div className="hamburger">
-          <MobileSideBar hasOverlay />
-        </div>
-        <div className='header-brand-div'>
-          <Link className='navbar-brand' to='/'>
-            <Logo className='full-logo' />
-            <SmallLogo className='glyph-logo' />
-          </Link>
-          {!loading && (
-            <Fragment>{isAuthenticated ? authTabs : guestTabs}</Fragment>
-          )}
-        </div>
-        
-          <form
-            id='search'
-            onSubmit={() => history.push('/questions')}
-            className={`grid--cell fl-grow1 searchbar px12 js-searchbar`}
-            autoComplete='off'
-          >
-            <div className='ps-relative search-frame'>
-              <input
-                className='s-input s-input__search h100 search-box'
-                autoComplete='off'
-                type='text'
-                name='search'
-                maxLength='35'
-                placeholder='Search...'
-              />
-              <Search />
-            </div>
-          </form>
-          <div className="header-search-div">
-          <Search className="search-icon" onClick={() => setSearchState(!searchState)} />
-          {!loading && (
-            <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>
-          )}
-        </div>
-      </nav>
-      {searchState && <SearchBar />}
+          <Search className='small-search-icon' />
+        </form>
+      )}
     </Fragment>
   );
 };

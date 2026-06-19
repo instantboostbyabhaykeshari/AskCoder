@@ -1,4 +1,4 @@
-const { AnswersRepository } = require('../repositories');
+const { AnswersRepository } = require('./data');
 
 exports.create = (newAnswer, result) => AnswersRepository.create(newAnswer, result);
 

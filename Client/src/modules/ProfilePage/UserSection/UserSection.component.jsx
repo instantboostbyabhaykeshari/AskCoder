@@ -1,9 +1,10 @@
+'use client';
+
 import React from "react";
 
 import AvatarCard from "./AvatarCard/AvatarCard.component";
 import ContentCard from "./ContentCard/ContentCard.component";
 
-import './UserSection.styles.scss';
 
 const UserSection = ({ user }) => (
   <div className='grid'>

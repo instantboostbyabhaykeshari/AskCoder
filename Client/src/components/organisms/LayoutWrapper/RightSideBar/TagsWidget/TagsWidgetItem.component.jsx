@@ -1,8 +1,9 @@
+'use client';
+
 import React, {Fragment} from "react";
 
 import TagBadge from "../../../../molecules/TagBadge/TagBadge.component";
 
-import './TagsWidgetItem.styles.scss';
 
 const TagsWidgetItem = ({ tagname, posts_count }) => {
   return <Fragment>

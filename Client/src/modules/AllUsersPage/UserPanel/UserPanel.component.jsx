@@ -1,10 +1,11 @@
+'use client';
+
 import React, {Fragment} from 'react';
 import moment from 'moment';
 import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
+import {Link} from '../../../next/nextRouterAdapter.js';
 import PropTypes from 'prop-types';
 
-import './UserPanel.styles.scss';
 
 const UserPanel = ({
   user: {id, username, created_at, posts_count, tags_count, views, gravatar},

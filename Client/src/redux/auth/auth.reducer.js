@@ -6,10 +6,31 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
+  UPDATE_AUTH_USER,
 } from './auth.types';
 
+const getStoredToken = () => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  return localStorage.getItem('token');
+};
+
+const setStoredToken = (token) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('token', token);
+  }
+};
+
+const removeStoredToken = () => {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('token');
+  }
+};
+
 const initialState = {
-  token: localStorage.getItem('token'),
+  token: getStoredToken(),
   isAuthenticated: null,
   loading: true,
   user: null,
@@ -27,7 +48,7 @@ export default function auth(state = initialState, action) {
 
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
-      localStorage.setItem('token', action.payload.token);
+      setStoredToken(action.payload.token);
       return {
         ...state,
         ...action.payload,
@@ -38,12 +59,20 @@ export default function auth(state = initialState, action) {
     case AUTH_ERROR:
     case LOGIN_FAIL:
     case LOGOUT:
-      localStorage.removeItem('token');
+      removeStoredToken();
       return {
         ...state,
         token: null,
         isAuthenticated: false,
         loading: false,
+      };
+    case UPDATE_AUTH_USER:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.payload,
+        },
       };
     default:
       return state;

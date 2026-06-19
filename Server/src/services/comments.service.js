@@ -1,4 +1,4 @@
-const { CommentsRepository } = require('../repositories');
+const { CommentsRepository } = require('./data');
 
 exports.create = (newComment, result) => CommentsRepository.create(newComment, result);
 

@@ -1,12 +1,13 @@
+'use client';
+
 import React, {Fragment} from 'react';
-import {Link} from 'react-router-dom';
+import {Link} from '../../../next/nextRouterAdapter.js';
 
 import {ReactComponent as QuoteLogo} from '../../../assets/Quote.svg';
 import {ReactComponent as VoteLogo} from '../../../assets/Vote.svg';
 import {ReactComponent as TagsLogo} from '../../../assets/Tags.svg';
 import {ReactComponent as TrophyLogo} from '../../../assets/Trophy.svg';
 
-import './Caption.styles.scss';
 
 const Caption = () => {
   return (
@@ -17,7 +18,7 @@ const Caption = () => {
           <div className='grid-icon'>
             <QuoteLogo/>
           </div>
-          <div className='grid-cell'>Get unstuck — ask a question</div>
+          <div className='grid-cell'>Get unstuck - ask a question</div>
         </div>
         <div className='caption-item'>
           <div className='grid-icon'>
@@ -40,17 +41,6 @@ const Caption = () => {
             <TrophyLogo/>
           </div>
           <div className='grid-cell'>Earn reputation and badges</div>
-        </div>
-        <div className='caption-item fc-black-600'>
-          <div>
-            Use the power of AskCoder inside your organization.
-            <br />
-            Try a{' '}
-            <Link to='https://stackoverflow.com/teams?utm_source=so-owned&utm_medium=product&utm_campaign=public-sign-up&utm_content=teams'>
-              free trial of AskCoder for Teams
-            </Link>
-            .
-          </div>
         </div>
       </div>
     </Fragment>

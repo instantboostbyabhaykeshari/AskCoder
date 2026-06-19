@@ -1,7 +1,8 @@
-import React from "react";
-import {Link} from "react-router-dom";
+'use client';
 
-import './AvatarCard.styles.scss';
+import React from "react";
+import {Link} from "../../../../next/nextRouterAdapter.js";
+
 
 const AvatarCard = ({ id, gravatar, views }) => (
   <div className='img-card'>

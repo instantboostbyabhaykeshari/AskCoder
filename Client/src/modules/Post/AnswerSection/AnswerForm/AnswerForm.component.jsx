@@ -1,15 +1,21 @@
+'use client';
+
 import React, {Fragment, useState, useRef} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {addAnswer} from '../../../../redux/answers/answers.actions';
-
+import {setAlert} from '../../../../redux/alert/alert.actions';
 
 import LinkButton from '../../../../components/molecules/LinkButton/LinkButton.component';
 import MarkdownEditor from '../../../../components/organisms/MarkdownEditor/MarkdownEditor.component';
 
-import './AnswerForm.styles.scss';
+const getPlainTextLength = (html) =>
+  (html || '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .trim().length;
 
-const AnswerForm = ({addAnswer, auth, post: {post}}) => {
+const AnswerForm = ({addAnswer, setAlert, auth, post: {post}}) => {
   const [formData, setFormData] = useState({
     text: '',
   });
@@ -20,7 +26,18 @@ const AnswerForm = ({addAnswer, auth, post: {post}}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    addAnswer(post.id, {text});
+
+    if (getPlainTextLength(text) < 1) {
+      setAlert('Please write an answer before submitting.', 'warning');
+      return;
+    }
+
+    const result = await addAnswer(post.id, {text});
+
+    if (!result?.success) {
+      return;
+    }
+
     setFormData({
       text: '',
     });
@@ -28,7 +45,7 @@ const AnswerForm = ({addAnswer, auth, post: {post}}) => {
   };
 
   const updateConvertedContent = (htmlConvertedContent) => {
-    setFormData({...formData, text: htmlConvertedContent});
+    setFormData((prev) => ({...prev, text: htmlConvertedContent}));
   };
 
   return (
@@ -65,6 +82,7 @@ const AnswerForm = ({addAnswer, auth, post: {post}}) => {
 AnswerForm.propTypes = {
   auth: PropTypes.object.isRequired,
   addAnswer: PropTypes.func.isRequired,
+  setAlert: PropTypes.func.isRequired,
   post: PropTypes.object.isRequired,
 };
 
@@ -73,4 +91,4 @@ const mapStateToProps = (state) => ({
   post: state.post,
 });
 
-export default connect(mapStateToProps, {addAnswer})(AnswerForm);
+export default connect(mapStateToProps, {addAnswer, setAlert})(AnswerForm);

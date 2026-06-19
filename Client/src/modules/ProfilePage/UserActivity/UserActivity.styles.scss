@@ -1,6 +1,7 @@
 .grid-cell2 {
   margin: 12px;
-  flex: 1 auto !important;
+  flex: 1 1 300px !important;
+  min-width: 0;
   color: #242729;
 
   .top-tags {

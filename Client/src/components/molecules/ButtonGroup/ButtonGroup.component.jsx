@@ -1,3 +1,5 @@
+'use client';
+
 import React, {Fragment} from 'react';
 import BaseButton from '../BaseButton/BaseButton.component';
 

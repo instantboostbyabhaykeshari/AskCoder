@@ -1,6 +1,7 @@
-import { loadUserData, registerUser, loginUser } from '../../api/authApi'
+import { loadUserData, registerUser, loginUser } from '../../services/api/authApi';
 import setAuthToken from './auth.utils';
 import {setAlert} from '../alert/alert.actions';
+import getApiError from '../../utils/apiError';
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -13,7 +14,7 @@ import {
 
 // Load User
 export const loadUser = () => async (dispatch) => {
-  if (localStorage.token) {
+  if (typeof window !== 'undefined' && localStorage.token) {
     setAuthToken(localStorage.token);
   }
   try {
@@ -42,19 +43,25 @@ export const register = ({ username, password }) => async (dispatch) => {
 
     // Store token in localStorage and set axios header
     if (res.data.data.token) {
-      localStorage.setItem('token', res.data.data.token);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('token', res.data.data.token);
+      }
       setAuthToken(res.data.data.token);
     }
 
-    dispatch(setAlert(res.data.message, 'success'));
+    dispatch(setAlert(res.data.message || 'Account created successfully.', 'success'));
 
     dispatch(loadUser());
+    return {success: true};
   } catch (err) {
-    dispatch(setAlert(err.response.data.message, 'danger'));
+    const error = getApiError(err, 'Unable to register. Please try again.');
+
+    dispatch(setAlert(error.message, 'danger'));
 
     dispatch({
       type: REGISTER_FAIL,
     });
+    return {success: false};
   }
 };
 
@@ -70,26 +77,34 @@ export const login = ({username, password}) => async (dispatch) => {
 
     // Store token in localStorage and set axios header
     if (res.data.data.token) {
-      localStorage.setItem('token', res.data.data.token);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('token', res.data.data.token);
+      }
       setAuthToken(res.data.data.token);
     }
 
-    dispatch(setAlert(res.data.message, 'success'));
+    dispatch(setAlert(res.data.message || 'Logged in successfully.', 'success'));
 
     dispatch(loadUser());
+    return {success: true};
   } catch (err) {
-    dispatch(setAlert(err.response.data.message, 'danger'));
+    const error = getApiError(err, 'Unable to log in. Please check your credentials.');
+
+    dispatch(setAlert(error.message, 'danger'));
 
     dispatch({
       type: LOGIN_FAIL,
     });
+    return {success: false};
   }
 };
 
 //LOGOUT
 export const logout = () => (dispatch) => {
-  dispatch(setAlert('User has logged out', 'success'));
-  localStorage.removeItem('token');
+  dispatch(setAlert('You have been logged out successfully.', 'success'));
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('token');
+  }
 
   dispatch({type: LOGOUT});
 };

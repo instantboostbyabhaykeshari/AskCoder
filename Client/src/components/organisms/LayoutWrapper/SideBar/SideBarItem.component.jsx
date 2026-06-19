@@ -1,9 +1,10 @@
+'use client';
+
 import React, { Fragment } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from '../../../../next/nextRouterAdapter.js';
 
 import { ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 
-import './SideBar.styles.scss';
 
 const SideBarItem = ({ link, icon, text, isHome }) => {
   return (
@@ -41,15 +42,17 @@ const HomeItem = ({ link, text }) => (
 const DefaultItem = ({ link, icon, text }) => (
   <NavLink
     activeClassName='active'
-    className='icon-link nav-link'
+    className={`${icon ? 'icon-link' : 'link'} nav-link`}
     to={link}
   >
     <ListItem disablePadding>
-      <ListItemButton className='menu-list-btn'>
-        <ListItemIcon className='menu-list-icon'>
-          {icon}
-        </ListItemIcon>
-        <ListItemText className='menu-list-text' primary={text}/>
+      <ListItemButton className='menu-list-btn' style={{ paddingLeft: icon ? undefined : '20px' }}>
+        {icon ? (
+          <ListItemIcon className='menu-list-icon'>
+            {icon}
+          </ListItemIcon>
+        ) : null}
+        <ListItemText className='menu-list-text' primary={text} />
       </ListItemButton>
     </ListItem>
   </NavLink>

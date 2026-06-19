@@ -13,7 +13,8 @@ import {
   allTagPostsData,
   createSinglePost,
   deleteSinglePost
-} from "../../api/postsApis";
+} from '../../services/api/postsApi';
+import getApiError from "../../utils/apiError";
 
 // Get posts
 export const getPosts = () => async (dispatch) => {
@@ -25,11 +26,13 @@ export const getPosts = () => async (dispatch) => {
       payload: res.data.data,
     });
   } catch (err) {
-    dispatch(setAlert(err.response.data.message, "danger"));
+    const error = getApiError(err, "Unable to load posts");
+
+    dispatch(setAlert(error.message, "danger"));
 
     dispatch({
       type: POST_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: error.statusText, status: error.status },
     });
   }
 };
@@ -44,11 +47,13 @@ export const getPost = (id) => async (dispatch) => {
       payload: res.data.data,
     });
   } catch (err) {
-    dispatch(setAlert(err.response.data.message, "danger"));
+    const error = getApiError(err, "Unable to load this question");
+
+    dispatch(setAlert(error.message, "danger"));
 
     dispatch({
       type: POST_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: error.statusText, status: error.status },
     });
   }
 };
@@ -63,11 +68,13 @@ export const getTagPosts = (tagName) => async (dispatch) => {
       payload: res.data.data,
     });
   } catch (err) {
-    dispatch(setAlert(err.response.data.message, "danger"));
+    const error = getApiError(err, "Unable to load tag questions");
+
+    dispatch(setAlert(error.message, "danger"));
 
     dispatch({
       type: POST_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: error.statusText, status: error.status },
     });
   }
 };
@@ -82,16 +89,20 @@ export const addPost = (formData) => async (dispatch) => {
       payload: res.data.data,
     });
 
-    dispatch(setAlert(res.data.message, "success"));
+    dispatch(setAlert(res.data.message || 'Question posted successfully.', 'success'));
 
     dispatch(getPosts());
+    return {success: true};
   } catch (err) {
-    dispatch(setAlert(err.response.data.message, "danger"));
+    const error = getApiError(err, 'Unable to post your question. Please try again.');
+
+    dispatch(setAlert(error.message, 'danger'));
 
     dispatch({
       type: POST_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: error.statusText, status: error.status },
     });
+    return {success: false};
   }
 };
 
@@ -105,13 +116,15 @@ export const deletePost = (id) => async (dispatch) => {
       payload: id,
     });
 
-    dispatch(setAlert(res.data.message, "success"));
+    dispatch(setAlert(res.data.message || 'Question deleted successfully.', 'success'));
   } catch (err) {
-    dispatch(setAlert(err.response.data.message, "danger"));
+    const error = getApiError(err, 'Unable to delete this question. Please try again.');
+
+    dispatch(setAlert(error.message, "danger"));
 
     dispatch({
       type: POST_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: error.statusText, status: error.status },
     });
   }
 };

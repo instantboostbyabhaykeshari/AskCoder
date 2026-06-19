@@ -1,7 +1,8 @@
-import React, {Fragment} from 'react';
-import {Link} from 'react-router-dom';
+'use client';
 
-import './TagBadge.styles.scss';
+import React, {Fragment} from 'react';
+import {Link} from '../../../next/nextRouterAdapter.js';
+
 
 const TagBadge = ({tag_name, size, display, link, href}) => {
   return (

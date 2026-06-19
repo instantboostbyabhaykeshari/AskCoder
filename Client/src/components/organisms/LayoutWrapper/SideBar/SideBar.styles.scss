@@ -1,72 +1,99 @@
 .side-bar-container {
-  width: 17%;
-  min-width: 206px;
+  width: var(--ac-sidebar-width);
+  min-width: var(--ac-sidebar-width);
   flex-shrink: 0;
-  z-index: 1;
-  box-shadow: 0 0 0 rgba(12,13,14,0.05);
-  transition: box-shadow ease-in-out .1s,transform ease-in-out .1s;
-  position: relative !important;
-  background-color: #3d3d3d;
+  position: sticky;
+  top: var(--ac-header-height);
+  align-self: flex-start;
+  height: calc(100vh - var(--ac-header-height));
+  overflow-y: auto;
+  background-color: var(--ac-surface);
+  border-right: 1px solid var(--ac-border-light);
 
   .side-bar-tabs {
-    float: right;
-    margin-top:25px;
+    padding: 16px 0;
 
     .public-tabs {
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
     .nav-link {
       text-decoration: none;
-      color: #c4c8cc;
+      color: var(--ac-text-muted);
 
       li {
         font-size: 13px;
+      }
 
-        .menu-list-icon {
-          min-width: 21px !important;
-        }
+      .menu-list-icon {
+        min-width: 20px !important;
+        color: var(--ac-text-light);
 
-        .menu-list-text {
-          margin: 0 !important;
+        .icon {
+          width: 18px;
+          height: 18px;
         }
+      }
+
+      .menu-list-text {
+        margin: 0 !important;
+        color: inherit;
       }
     }
 
     .home-link {
       li {
-        border-right: 3px;
-        margin-bottom: 12px;
+        margin-bottom: 4px;
       }
     }
 
     .icon-link {
       li {
-        border-right: 3px solid transparent;
-        width: 160px;
+        border-left: 3px solid transparent;
+        width: 100%;
+      }
 
-        .menu-list-btn {
-          padding-left: 8px;
-        }
+      .menu-list-btn {
+        padding-left: 12px !important;
+        border-radius: 0;
+      }
+    }
+
+    .link {
+      li {
+        border-left: 3px solid transparent;
+        width: 100%;
+      }
+
+      .menu-list-btn {
+        border-radius: 0;
       }
     }
 
     .title {
-      font-size: 12px;
-      padding-left: 8px;
-      margin-bottom: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 8px 12px 4px;
+      margin-bottom: 0;
+      color: var(--ac-text-light);
     }
 
     .active {
       li {
-        font-weight: bold;
-        background: #2d2d2d;
-        color: #f2f2f3;
-        border-right: 3px solid #f48024;
+        font-weight: 600;
+        background: var(--ac-orange-light);
+        color: var(--ac-text);
+        border-left: 3px solid var(--ac-orange);
       }
 
       .menu-list-text > span {
-        font-weight: 700;
+        font-weight: 600;
+      }
+
+      .menu-list-icon {
+        color: var(--ac-orange);
       }
     }
   }

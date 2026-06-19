@@ -1,5 +1,5 @@
 const { responseHandler } = require('../helpers');
-const { UsersRepository } = require('../repositories');
+const { UsersRepository } = require('../services/data');
 
 const checkExistence = async (req, res, next) => {
   const { username } = req.body;

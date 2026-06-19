@@ -1,6 +1,7 @@
 import {setAlert} from '../alert/alert.actions';
 import {GET_TAG, GET_TAGS, TAG_ERROR} from './tags.types';
-import { allTagsData, singleTagData } from '../../api/tagsApi';
+import { allTagsData, singleTagData } from '../../services/api/tagsApi';
+import getApiError from '../../utils/apiError';
 
 export const getTag = (tagName) => async (dispatch) => {
   try {
@@ -11,11 +12,13 @@ export const getTag = (tagName) => async (dispatch) => {
       payload: res.data.data,
     });
   } catch (err) {
-    dispatch(setAlert(err.response.data.message, 'danger'));
+    const error = getApiError(err, 'Unable to load tag');
+
+    dispatch(setAlert(error.message, 'danger'));
 
     dispatch({
       type: TAG_ERROR,
-      payload: {msg: err.response.statusText, status: err.response.status},
+      payload: {msg: error.statusText, status: error.status},
     });
   }
 };
@@ -29,11 +32,13 @@ export const getTags = () => async (dispatch) => {
       payload: res.data.data,
     });
   } catch (err) {
-    dispatch(setAlert(err.response.data.message, 'danger'));
+    const error = getApiError(err, 'Unable to load tags');
+
+    dispatch(setAlert(error.message, 'danger'));
 
     dispatch({
       type: TAG_ERROR,
-      payload: {msg: err.response.statusText, status: err.response.status},
+      payload: {msg: error.statusText, status: error.status},
     });
   }
 };

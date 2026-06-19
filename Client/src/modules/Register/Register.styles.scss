@@ -1,31 +1,37 @@
 .auth-page {
-  height: 100vh;
+  min-height: calc(100vh - var(--ac-header-height));
   width: 100%;
-  background-color: #3d3d3d;
+  background-color: var(--ac-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
 }
 
 .register-content {
-  background-color: transparent;
-  box-sizing: border-box;
+  width: 100%;
+  max-width: 960px;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 90.7vh;
 }
 
-.register-grid  {
+.register-grid {
   display: flex;
   align-items: center;
-  box-sizing: inherit;
+  justify-content: center;
+  gap: 48px;
+  width: 100%;
 }
 
 @media (max-width: 799px) {
   .register-grid {
     flex-direction: column;
-    padding: 7rem 0;
+    gap: 32px;
+    padding: 24px 12px;
   }
-  .register-content {
-    height: auto;
-    margin: auto 0;
+
+  .auth-page {
+    padding: 24px 12px;
   }
 }

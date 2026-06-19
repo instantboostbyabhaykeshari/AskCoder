@@ -2,6 +2,19 @@
   .post-layout {
     display: grid;
     grid-template-columns: max-content 1fr;
-    color: #242729;
+    gap: 16px;
+    padding: 20px;
+    background: var(--ac-surface);
+    border: 1px solid var(--ac-border-light);
+    border-radius: var(--ac-radius);
+    box-shadow: var(--ac-shadow);
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 520px) {
+  .question .post-layout {
+    grid-template-columns: 1fr;
+    padding: 16px;
   }
 }

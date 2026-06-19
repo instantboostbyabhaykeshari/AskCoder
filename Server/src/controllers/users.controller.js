@@ -71,3 +71,40 @@ exports.register = asyncHandler(async (req, res) => {
       .json(responseHandler(false, 500, 'Server Error', null));
   }
 });
+
+exports.updateUser = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res
+      .status(400)
+      .json(responseHandler(false, 400, errors.array()[0].msg, null));
+  }
+
+  const { currentPassword, newPassword } = req.body;
+
+  if (newPassword && !currentPassword) {
+    return res
+      .status(400)
+      .json(responseHandler(false, 400, 'Current password is required', null));
+  }
+
+  try {
+    await usersService.updateProfile(
+      req.params.id,
+      req.user.id,
+      req.body,
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          return res.status(err.code).json(err);
+        }
+        return res.status(data.code).json(data);
+      },
+    );
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json(responseHandler(false, 500, 'Server Error', null));
+  }
+});

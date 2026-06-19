@@ -1,6 +1,7 @@
+'use client';
+
 import React, {Fragment} from 'react';
 
-import './AskWidget.styles.scss';
 
 const AskWidget = () => {
   return (

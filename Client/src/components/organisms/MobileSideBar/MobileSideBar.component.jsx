@@ -1,111 +1,106 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+'use client';
 
-import { ReactComponent as Hamburger } from "../../../assets/LogoGlyphMd.svg";
-import { ReactComponent as Stack } from "../../../assets/LogoMd.svg";
-import { ReactComponent as GlobalIcon } from "../../../assets/Globe.svg";
+import React, { useState } from 'react';
+import { NavLink } from '../../../next/nextRouterAdapter.js';
 
-import "./MobileSideBar.styles.scss";
+import AskCoderLogo from '../../atoms/AskCoderLogo/AskCoderLogo.component';
+import { mainNavItems, infoNavItems } from '../../../config/navigation';
 
 const SidebarUI = ({ isOpen, ...rest }) => {
-	const classes = ["Sidebar", isOpen ? "is-open" : ""];
-
-	return (
-		<div aria-hidden={!isOpen} className={classes.join(" ")} {...rest} />
-	);
+  const classes = ['Sidebar', isOpen ? 'is-open' : ''];
+  return <div aria-hidden={!isOpen} className={classes.join(' ')} {...rest} />;
 };
 
-SidebarUI.Overlay = (props) => <div className="SidebarOverlay" {...props} />;
+const SidebarOverlay = (props) => <div className='SidebarOverlay' {...props} />;
+SidebarOverlay.displayName = 'SidebarOverlay';
+SidebarUI.Overlay = SidebarOverlay;
 
-SidebarUI.Content = ({ width = "20rem", isRight = false, ...rest }) => {
-	const classes = ["SidebarContent", isRight ? "is-right" : ""];
-	const style = {
-		width,
-		height: "100%",
-		top: 0,
-		right: isRight ? `-${width}` : "auto",
-		left: !isRight ? `-${width}` : "auto",
-	};
-
-	return <div className={classes.join(" ")} style={style} {...rest} />;
+const SidebarContent = ({ width = '20rem', isRight = false, ...rest }) => {
+  const classes = ['SidebarContent', isRight ? 'is-right' : ''];
+  const style = {
+    width,
+    height: '100%',
+    top: 0,
+    right: isRight ? `-${width}` : 'auto',
+    left: !isRight ? `-${width}` : 'auto',
+  };
+  return <div className={classes.join(' ')} style={style} {...rest} />;
 };
+SidebarContent.displayName = 'SidebarContent';
+SidebarUI.Content = SidebarContent;
+
+const MobileNavSection = ({ title, items, onNavigate }) => (
+  <div className='public-tabs'>
+    {title && <p className='title fc-light'>{title}</p>}
+    {items.map(({ link, icon, text }) => (
+      <NavLink
+        key={link}
+        activeClassName='active'
+        className={icon ? 'icon-link' : 'link'}
+        to={link}
+        onClick={onNavigate}
+      >
+        <p>
+          {icon}
+          {text}
+        </p>
+      </NavLink>
+    ))}
+  </div>
+);
 
 const MobileSideBar = (props) => {
-	const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-	function openSidebar(isOp = true) {
-		setIsOpen(isOp);
-	}
+  const openSidebar = (isOp = true) => setIsOpen(isOp);
+  const closeSidebar = () => setIsOpen(false);
 
-	const { hasOverlay, isRight } = props;
+  const { hasOverlay, isRight } = props;
 
-	return (
-		<SidebarUI isOpen={isOpen}>
-			<Hamburger onClick={openSidebar} className="ham" />
+  return (
+    <SidebarUI isOpen={isOpen}>
+      <button
+        type='button'
+        className='ham-button'
+        onClick={() => openSidebar(true)}
+        aria-label='Open navigation menu'
+      >
+        <span className='material-icons ham'>menu</span>
+      </button>
 
-			<SidebarUI.Content
-				isRight={isRight}
-				onClick={() => openSidebar(false)}
-			>
-				<div className="content-logo">
-					<Stack />
-				</div>
-				<div className="content-inner">
-					<div className="side-bar-tabs">
-						<NavLink
-							exact
-							activeClassName="active"
-							className="home-link"
-							to="/"
-						>
-							<p>Home</p>
-						</NavLink>
+      <SidebarUI.Content isRight={isRight}>
+        <div className='content-logo'>
+          <AskCoderLogo width={160} className='sidebar-logo' />
+        </div>
+        <div className='content-inner'>
+          <div className='side-bar-tabs'>
+            <NavLink
+              exact
+              activeClassName='active'
+              className='home-link'
+              to='/'
+              onClick={closeSidebar}
+            >
+              <p>Home</p>
+            </NavLink>
 
-						<div className="public-tabs">
-							<p className="title fc-light">PUBLIC</p>
-							<NavLink
-								activeClassName="active"
-								className="icon-link"
-								to="/questions"
-							>
-								<p>
-									<GlobalIcon className="icon" />
-									AskCoder
-								</p>
-							</NavLink>
-							<NavLink
-								activeClassName="active"
-								className="link"
-								to="/tags"
-							>
-								<p>Tags</p>
-							</NavLink>
-							<NavLink
-								activeClassName="active"
-								className="link"
-								to="/users"
-							>
-								<p>Users</p>
-							</NavLink>
-							<NavLink
-								activeClassName="active"
-								className="link"
-								to="/jobs"
-							>
-								<p>Jobs</p>
-							</NavLink>
-						</div>
-						<div className="teams-tabs">
-							<p className="title fc-light">TEAMS</p>
-						</div>
-					</div>
-				</div>
-			</SidebarUI.Content>
-			{hasOverlay ? (
-				<SidebarUI.Overlay onClick={() => openSidebar(false)} />
-			) : false}
-		</SidebarUI>
-	);
+            <MobileNavSection
+              title='Public'
+              items={mainNavItems}
+              onNavigate={closeSidebar}
+            />
+            <MobileNavSection
+              title='Pages'
+              items={infoNavItems}
+              onNavigate={closeSidebar}
+            />
+          </div>
+        </div>
+      </SidebarUI.Content>
+
+      {hasOverlay ? <SidebarUI.Overlay onClick={closeSidebar} /> : false}
+    </SidebarUI>
+  );
 };
 
 export default MobileSideBar;

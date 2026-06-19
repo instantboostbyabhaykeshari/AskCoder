@@ -1,13 +1,15 @@
+'use client';
+
 import React, { Fragment, useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { addPost } from "../../../redux/posts/posts.actions";
+import { setAlert } from "../../../redux/alert/alert.actions";
 import MarkdownEditor from "../../../components/organisms/MarkdownEditor/MarkdownEditor.component";
 import { badWordsFilter } from "../../../utils/censorBadWords";
 
-import "./AskForm.styles.scss";
 
-const AskForm = ({ addPost }) => {
+const AskForm = ({ addPost, setAlert }) => {
   const [formData, setFormData] = useState({
     title: "",
     body: "",
@@ -25,10 +27,28 @@ const AskForm = ({ addPost }) => {
   const { title, body, tagname } = formData;
 
   const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+
+  const getPlainTextLength = (html) =>
+    (html || "")
+      .replace(/<[^>]*>/g, "")
+      .replace(/&nbsp;/g, " ")
+      .trim().length;
 
   const validateFormData = () => {
-    const errors = [];
+    const errors = {};
+
+    if (formData.title.trim().length < 15) {
+      errors.title = "Enter a title with minimum 15 characters";
+    }
+
+    if (getPlainTextLength(formData.body) < 30) {
+      errors.body = "Enter a body with minimum 30 characters";
+    }
+
+    if (!formData.tagname.trim()) {
+      errors.tagname = "At least one tag is required";
+    }
 
     const tags = formData.tagname
       .split(",")
@@ -37,23 +57,17 @@ const AskForm = ({ addPost }) => {
 
     tags.forEach((tag) => {
       if (tag.length > 25) {
-        errors.push({
-          tagname: `A tag name can't be longer than 25 characters.`,
-        });
+        errors.tagname = "A tag name can't be longer than 25 characters.";
       } else if (/[^a-zA-Z]/.test(tag)) {
-        errors.push({
-          tagname: `${tag} tag must contain English alphabets only (no spaces).`,
-        });
+        errors.tagname = `${tag} tag must contain English alphabets only (no spaces).`;
       }
     });
 
     if (badWordsFilter.isProfane(formData.tagname)) {
-      errors.push({ tagname: "Inappropriate words are not allowed." });
+      errors.tagname = "Inappropriate words are not allowed.";
     }
 
-    errors
-      .reverse()
-      .forEach((err) => setFormErrors((prev) => ({ ...prev, ...err })));
+    setFormErrors(errors);
 
     return errors;
   };
@@ -63,10 +77,16 @@ const AskForm = ({ addPost }) => {
 
     const errors = validateFormData();
 
-    // if there are errors, don't submit
-    if (errors.length > 0) return;
+    if (Object.keys(errors).length > 0) {
+      setAlert(Object.values(errors)[0], "warning");
+      return;
+    }
 
-    addPost({ title, body, tagname });
+    const result = await addPost({ title, body, tagname });
+
+    if (!result?.success) {
+      return;
+    }
 
     setFormData({
       title: "",
@@ -77,7 +97,7 @@ const AskForm = ({ addPost }) => {
   };
 
   const updateConvertedContent = (htmlConvertedContent) => {
-    setFormData({ ...formData, body: htmlConvertedContent });
+    setFormData((prev) => ({ ...prev, body: htmlConvertedContent }));
   };
 
   return (
@@ -101,8 +121,8 @@ const AskForm = ({ addPost }) => {
                 onChange={(e) => onChange(e)}
                 id="title"
                 placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
-                required
               />
+              <p className="form-error-message">{formErrors.title}</p>
             </div>
             <div className="body-grid">
               <label className="form-label s-label fc-black-800">
@@ -118,6 +138,7 @@ const AskForm = ({ addPost }) => {
                   onChange={updateConvertedContent}
                 />
               </div>
+              <p className="form-error-message">{formErrors.body}</p>
             </div>
             <div className="tag-grid">
               <label className="form-label s-label">
@@ -134,9 +155,8 @@ const AskForm = ({ addPost }) => {
                 onChange={(e) => onChange(e)}
                 id="tagname"
                 placeholder="e.g. (ajax, django, string)"
-                required
               />
-              <p className="fc-error fw-bold ml8 mt4">{formErrors.tagname}</p>
+              <p className="form-error-message">{formErrors.tagname}</p>
             </div>
           </div>
         </div>
@@ -156,6 +176,7 @@ const AskForm = ({ addPost }) => {
 
 AskForm.propTypes = {
   addPost: PropTypes.func.isRequired,
+  setAlert: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addPost })(AskForm);
+export default connect(null, { addPost, setAlert })(AskForm);

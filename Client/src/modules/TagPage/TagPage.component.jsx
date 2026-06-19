@@ -1,6 +1,8 @@
+'use client';
+
 import React, {useEffect, Fragment, useState} from 'react';
 import {connect} from 'react-redux';
-import {Redirect, useParams} from 'react-router-dom';
+import {Redirect, useParams} from '../../next/nextRouterAdapter.js';
 import PropTypes from 'prop-types';
 import {getTagPosts} from '../../redux/posts/posts.actions';
 import {getTag} from '../../redux/tags/tags.actions';
@@ -11,7 +13,6 @@ import PostItem from '../../components/molecules/PostItem/PostItem.component';
 import Spinner from '../../components/molecules/Spinner/Spinner.component';
 import ButtonGroup from '../../components/molecules/ButtonGroup/ButtonGroup.component';
 
-import './TagPage.styles.scss';
 
 const TagPage = ({getTag, getTagPosts, tag, post: {posts, loading}}) => {
   const { tagname } = useParams();

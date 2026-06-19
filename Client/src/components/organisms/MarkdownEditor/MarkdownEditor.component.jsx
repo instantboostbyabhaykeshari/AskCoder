@@ -1,16 +1,35 @@
-import React, {useState, forwardRef, useImperativeHandle} from 'react';
-import RichTextEditor from 'react-rte';
+'use client';
 
-import './MarkdownEditor.styles.scss';
+import React, {useEffect, useState, forwardRef, useImperativeHandle} from 'react';
+
 
 const MarkdownEditor = forwardRef((props, ref) => {
-  const [value, setValue] = useState(RichTextEditor.createEmptyValue());
+  const [RichTextEditor, setRichTextEditor] = useState(null);
+  const [value, setValue] = useState(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    import('react-rte').then((module) => {
+      if (!isMounted) return;
+
+      const editor = module.default;
+      setRichTextEditor(() => editor);
+      setValue(editor.createEmptyValue());
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useImperativeHandle(ref, () => ({
     cleanEditorState() {
-      setValue(RichTextEditor.createEmptyValue());
+      if (RichTextEditor) {
+        setValue(RichTextEditor.createEmptyValue());
+      }
     },
-  }));
+  }), [RichTextEditor]);
 
   const onChange = (newValue) => {
     setValue(newValue);
@@ -57,6 +76,11 @@ const MarkdownEditor = forwardRef((props, ref) => {
       },
     ],
   };
+
+  if (!RichTextEditor || !value) {
+    return <div className='rich-text-editor-root' />;
+  }
+
   return (
     <RichTextEditor
       className='rich-text-editor-root'
@@ -68,5 +92,7 @@ const MarkdownEditor = forwardRef((props, ref) => {
     />
   );
 });
+
+MarkdownEditor.displayName = 'MarkdownEditor';
 
 export default MarkdownEditor;

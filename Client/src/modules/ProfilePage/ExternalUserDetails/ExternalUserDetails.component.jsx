@@ -1,10 +1,10 @@
-import React from "react";
-import {Link} from "react-router-dom";
+'use client';
 
-import {ReactComponent as StackExchangeLogo} from "../../../assets/StackExchange.svg";
-import {ReactComponent as Logo} from "../../../assets/LogoGlyphMd.svg";
+import React from 'react';
+import {Link} from '../../../next/nextRouterAdapter.js';
 
-import './ExternalUserDetails.styles.scss';
+import {ReactComponent as StackExchangeLogo} from '../../../assets/StackExchange.svg';
+import AskCoderLogo from '../../../components/atoms/AskCoderLogo/AskCoderLogo.component';
 
 const ExternalUserDetails = () => (
   <div className='grid-cell1'>
@@ -22,7 +22,7 @@ const ExternalUserDetails = () => (
           <li className='item'>
             <Link to='/'>
               <span>
-                <Logo className='logo' />
+                <AskCoderLogo width={54} className='logo' />
               </span>
               <span className='fc-blue-600 fs-body2'>
                 AskCoder
@@ -41,6 +41,6 @@ const ExternalUserDetails = () => (
       </div>
     </div>
   </div>
-)
+);
 
 export default ExternalUserDetails;

@@ -1,3 +1,5 @@
+'use client';
+
 import React, {Fragment} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
@@ -6,7 +8,6 @@ import CommentCell from './CommentCell/CommentCell.component';
 import VoteCell from './VoteCell/VoteCell.component';
 import PostCell from './PostCell/PostCell.component';
 
-import './QuestionSection.styles.scss';
 
 const QuestionSection = ({
   post: {

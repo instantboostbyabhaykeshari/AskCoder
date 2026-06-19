@@ -1,23 +1,28 @@
+'use client';
+
 import React from "react";
 
 import { ReactComponent as EditLogo } from "../../../../../assets/Edit.svg";
+import { getFeaturedBlogPosts } from "../../../../../data/blogPosts";
+
+const featuredPosts = getFeaturedBlogPosts(2);
 
 export const SideBarWidgetData = [
   {
     type: 'header',
-    title: 'The Overflow Blog'
+    title: 'Blog'
   },
-  {
+  ...featuredPosts.map((post) => ({
     type: 'item',
-    title: 'Celebrating the Stack Exchange sites that turned ten years old in Q1 2022',
-    icon: <EditLogo/>,
-    link: 'https://stackoverflow.blog/2022/03/16/celebrating-the-stack-exchange-site-that-turned-ten-years-old-in-q1-2022'
-  },
+    title: post.title,
+    icon: <EditLogo />,
+    link: `/blog/${post.slug}`,
+    internal: true,
+  })),
   {
-    type: 'item',
-    title: 'New data: What makes developers happy at work',
-    icon: <EditLogo/>,
-    link: 'https://stackoverflow.blog/2022/03/17/new-data-what-makes-developers-happy-at-work'
+    type: 'footer',
+    title: 'View all posts',
+    link: '/blog',
   },
   {
     type: 'header',
@@ -63,4 +68,4 @@ export const SideBarWidgetData = [
     icon: <span className="fc-black-500" title="Question score (upvotes - downvotes)">10</span>,
     link: 'https://meta.stackoverflow.com/questions/416665/what-is-the-true-intention-in-the-how-to-reference-material-written-by-others'
   },
-]
+];

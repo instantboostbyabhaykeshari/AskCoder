@@ -1,4 +1,4 @@
-const { TagsRepository } = require('../repositories');
+const { TagsRepository } = require('./data');
 
 exports.retrieveAll = (result) => TagsRepository.retrieveAll(result);
 

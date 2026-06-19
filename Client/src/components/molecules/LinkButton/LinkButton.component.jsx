@@ -1,5 +1,7 @@
+'use client';
+
 import React, {Fragment} from 'react';
-import {Link} from 'react-router-dom';
+import {Link} from '../../../next/nextRouterAdapter.js';
 
 const LinkButton = ({text, link, type, handleClick, marginTop}) => {
   return (

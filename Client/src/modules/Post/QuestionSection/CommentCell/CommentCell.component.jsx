@@ -1,25 +1,28 @@
+'use client';
+
 import React, { useEffect, Fragment, useState } from "react";
 import moment from "moment";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link } from "../../../../next/nextRouterAdapter.js";
 import {
   getComments,
   deleteComment,
   addComment,
 } from "../../../../redux/comments/comments.actions";
+import { setAlert } from "../../../../redux/alert/alert.actions";
 
 import Spinner from "../../../../components/molecules/Spinner/Spinner.component";
 import TagBadge from "../../../../components/molecules/TagBadge/TagBadge.component";
 import LinkButton from "../../../../components/molecules/LinkButton/LinkButton.component";
 
-import "./CommentCell.styles.scss";
 import censorBadWords from "../../../../utils/censorBadWords";
 
 const CommentCell = ({
   deleteComment,
   addComment,
   getComments,
+  setAlert,
   auth,
   comment,
   post: { post },
@@ -36,11 +39,22 @@ const CommentCell = ({
   const { body } = formData;
 
   const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    addComment(post.id, { body });
+
+    if (!body.trim()) {
+      setAlert('Please enter a comment before submitting.', 'warning');
+      return;
+    }
+
+    const result = await addComment(post.id, { body });
+
+    if (!result?.success) {
+      return;
+    }
+
     setFormData({
       body: "",
     });
@@ -132,6 +146,7 @@ CommentCell.propTypes = {
   addComment: PropTypes.func.isRequired,
   deleteComment: PropTypes.func.isRequired,
   getComments: PropTypes.func.isRequired,
+  setAlert: PropTypes.func.isRequired,
   comment: PropTypes.object.isRequired,
 };
 
@@ -145,4 +160,5 @@ export default connect(mapStateToProps, {
   deleteComment,
   getComments,
   addComment,
+  setAlert,
 })(CommentCell);

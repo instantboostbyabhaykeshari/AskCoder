@@ -1,8 +1,9 @@
+'use client';
+
 import React, {Fragment} from 'react';
 import moment from 'moment';
-import {Link} from 'react-router-dom';
+import {Link} from '../../../next/nextRouterAdapter.js';
 
-import './UserCard.styles.scss';
 
 const UserCard = ({
   created_at,

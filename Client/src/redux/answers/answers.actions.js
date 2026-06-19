@@ -5,7 +5,8 @@ import {
   ADD_ANSWER,
   DELETE_ANSWER,
 } from "./answers.types";
-import { allAnswersData, createSingleAnswer, deleteSingleAnswer } from "../../api/answersApi";
+import { allAnswersData, createSingleAnswer, deleteSingleAnswer } from '../../services/api/answersApi';
+import getApiError from "../../utils/apiError";
 
 export const getAnswers = (id) => async (dispatch) => {
   try {
@@ -16,9 +17,11 @@ export const getAnswers = (id) => async (dispatch) => {
       payload: res.data.data,
     });
   } catch (err) {
+    const error = getApiError(err, "Unable to load answers");
+
     dispatch({
       type: ANSWER_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: error.statusText, status: error.status },
     });
   }
 };
@@ -33,16 +36,20 @@ export const addAnswer = (postId, formData) => async (dispatch) => {
       payload: res.data.data,
     });
 
-    dispatch(setAlert(res.data.message, "success"));
+    dispatch(setAlert(res.data.message || 'Answer posted successfully.', 'success'));
 
     dispatch(getAnswers(postId));
+    return {success: true};
   } catch (err) {
-    dispatch(setAlert(err.response.data.message, "danger"));
+    const error = getApiError(err, 'Unable to post your answer. Please try again.');
+
+    dispatch(setAlert(error.message, 'danger'));
 
     dispatch({
       type: ANSWER_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: error.statusText, status: error.status },
     });
+    return {success: false};
   }
 };
 
@@ -56,13 +63,15 @@ export const deleteAnswer = (AnswerId) => async (dispatch) => {
       payload: AnswerId,
     });
 
-    dispatch(setAlert(res.data.message, "success"));
+    dispatch(setAlert(res.data.message || 'Answer deleted successfully.', 'success'));
   } catch (err) {
-    dispatch(setAlert(err.response.data.message, "danger"));
+    const error = getApiError(err, 'Unable to delete this answer. Please try again.');
+
+    dispatch(setAlert(error.message, "danger"));
 
     dispatch({
       type: ANSWER_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: error.statusText, status: error.status },
     });
   }
 };

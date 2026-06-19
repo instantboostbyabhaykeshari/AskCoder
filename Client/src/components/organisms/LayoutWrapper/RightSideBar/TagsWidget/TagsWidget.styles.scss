@@ -1,23 +1,31 @@
 .side-bar-tags {
   word-wrap: break-word;
   margin-bottom: 20px;
-  color: #242729;
+  color: var(--ac-text);
   margin-top: 24px;
+  padding: 16px;
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-border-light);
+  border-radius: var(--ac-radius);
+  box-shadow: var(--ac-shadow);
 
   .tag-headline {
-    color: #3c4146;
-    font-size: 18px;
-    font-weight: 400;
-    margin-bottom: 18px;
+    color: var(--ac-text);
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
     margin-top: 0;
   }
 }
 
 .show-tags {
   display: block;
-  margin: 5px 0;
-  color: #0077cc;
-  text-decoration: none;
-  cursor: pointer;
+  margin: 8px 0 0;
+  color: var(--ac-link);
   font-size: 13px;
+  font-weight: 500;
+
+  &:hover {
+    color: var(--ac-link-hover);
+  }
 }

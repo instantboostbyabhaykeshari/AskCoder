@@ -1,37 +1,31 @@
-import React, { Fragment } from "react";
+'use client';
 
-import {ReactComponent as GitHub} from "../../../assets/GitHub.svg";
-import {ReactComponent as Database} from "../../../assets/Database.svg";
+import React from 'react';
+import { Link } from '../../../next/nextRouterAdapter.js';
 
-import './Footer.styles.scss';
+const footerLinks = [
+  { label: 'About', href: '/about' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Contact', href: '/contact' },
+  { label: 'Privacy', href: '/privacy' },
+  { label: 'Terms', href: '/terms' },
+];
 
-const Footer = () => {
-  return <Fragment>
-    <div className='footer'>
-      <div className="socials">
-        <div className="social-item">
-          <a
-            href='https://github.com/Mayank0255/Stackoverflow-Clone-Frontend'
-            target='_blank'
-            rel="noreferrer"
-          >
-            <GitHub/>
-          </a>
-          <p><strong>Frontend</strong></p>
-        </div>
-        <div className="social-item">
-          <a
-            href='https://github.com/Mayank0255/Stackoverflow-Clone-Backend'
-            target='_blank'
-            rel="noreferrer"
-          >
-            <Database/>
-          </a>
-          <p><strong>Backend</strong></p>
-        </div>
-      </div>
+const Footer = () => (
+  <footer className='footer'>
+    <div className='footer__inner'>
+      <nav className='footer__nav' aria-label='Footer'>
+        {footerLinks.map(({ label, href }) => (
+          <Link key={label} to={href} className='footer__link'>
+            {label}
+          </Link>
+        ))}
+      </nav>
+      <p className='footer__copyright'>
+        Copyright &copy; 2026 Abhay. All rights reserved.
+      </p>
     </div>
-  </Fragment>
-};
+  </footer>
+);
 
 export default Footer;

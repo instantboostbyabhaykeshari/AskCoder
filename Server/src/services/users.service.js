@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 
 const { responseHandler, getJwtToken } = require('../helpers');
-const { UsersRepository } = require('../repositories');
+const { UsersRepository } = require('./data');
 
 exports.register = async (newUser, result) => {
   const salt = await bcrypt.genSalt(10);
@@ -71,4 +71,66 @@ exports.retrieveOne = async (id, result) => {
 exports.loadUser = async (userId, result) => {
   const response = await UsersRepository.retrieveOne({ id: userId }, result);
   result(null, responseHandler(true, 200, 'Success', response));
+};
+
+exports.updateProfile = async (userId, requestUserId, profileData, result) => {
+  if (userId !== requestUserId) {
+    result(
+      responseHandler(false, 401, 'You are not authorized to update this profile', null),
+      null,
+    );
+    return null;
+  }
+
+  const user = await UsersRepository.retrieveOne({ id: userId });
+
+  if (user === null) {
+    result(responseHandler(false, 404, 'User not found', null), null);
+    return null;
+  }
+
+  const updates = {};
+  const { username, currentPassword, newPassword } = profileData;
+
+  if (username && username.trim() !== user.username) {
+    const trimmedUsername = username.trim();
+    const existingUser = await UsersRepository.retrieveOne({ username: trimmedUsername });
+
+    if (existingUser !== null) {
+      result(responseHandler(false, 400, 'Username already taken', null), null);
+      return null;
+    }
+
+    updates.username = trimmedUsername;
+  }
+
+  if (newPassword) {
+    if (!currentPassword) {
+      result(responseHandler(false, 400, 'Current password is required', null), null);
+      return null;
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isMatch) {
+      result(responseHandler(false, 400, 'Current password is incorrect', null), null);
+      return null;
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    updates.password = await bcrypt.hash(newPassword, salt);
+  }
+
+  if (Object.keys(updates).length === 0) {
+    result(responseHandler(false, 400, 'No changes to update', null), null);
+    return null;
+  }
+
+  await UsersRepository.update(userId, updates);
+
+  const updatedProfile = await UsersRepository.retrieveOneWithCounts(userId);
+
+  result(null, responseHandler(true, 200, 'Profile updated successfully', updatedProfile));
+
+  return updatedProfile;
 };

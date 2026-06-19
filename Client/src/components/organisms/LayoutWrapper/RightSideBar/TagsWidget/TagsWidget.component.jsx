@@ -1,12 +1,13 @@
+'use client';
+
 import React, {useEffect, Fragment} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
+import {Link} from '../../../../../next/nextRouterAdapter.js';
 
 import {getTags} from '../../../../../redux/tags/tags.actions';
 import TagsWidgetItem from "./TagsWidgetItem.component";
 
-import './TagsWidget.styles.scss';
 
 const TagsWidget = ({getTags, tag: {tags, loading}}) => {
   useEffect(() => {

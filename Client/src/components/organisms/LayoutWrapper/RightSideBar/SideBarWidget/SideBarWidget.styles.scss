@@ -1,4 +1,25 @@
 .s-sidebarwidget__yellow {
-  color: #f2f2f3 !important;
+  color: var(--ac-text) !important;
   margin-top: 24px;
+  padding: 16px;
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-border-light);
+  border-radius: var(--ac-radius);
+  box-shadow: var(--ac-shadow);
+}
+
+.s-sidebarwidget--footer {
+  border-top: 1px solid var(--ac-border-light);
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+.blog-widget__view-all {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ac-link) !important;
+
+  &:hover {
+    color: var(--ac-link-hover) !important;
+  }
 }

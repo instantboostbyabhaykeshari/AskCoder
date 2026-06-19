@@ -5,7 +5,8 @@ import {
   ADD_COMMENT,
   DELETE_COMMENT,
 } from "./comments.types";
-import { allCommentsData, createSingleComment, deleteSingleComment } from "../../api/commentsApi";
+import { allCommentsData, createSingleComment, deleteSingleComment } from '../../services/api/commentsApi';
+import getApiError from "../../utils/apiError";
 
 export const getComments = (id) => async (dispatch) => {
   try {
@@ -16,9 +17,11 @@ export const getComments = (id) => async (dispatch) => {
       payload: res.data.data,
     });
   } catch (err) {
+    const error = getApiError(err, "Unable to load comments");
+
     dispatch({
       type: COMMENT_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: error.statusText, status: error.status },
     });
   }
 };
@@ -33,16 +36,20 @@ export const addComment = (postId, formData) => async (dispatch) => {
       payload: res.data.data,
     });
 
-    dispatch(setAlert(res.data.message, "success"));
+    dispatch(setAlert(res.data.message || 'Comment added successfully.', 'success'));
 
     dispatch(getComments(postId));
+    return {success: true};
   } catch (err) {
-    dispatch(setAlert(err.response.data.message, "danger"));
+    const error = getApiError(err, 'Unable to add your comment. Please try again.');
+
+    dispatch(setAlert(error.message, 'danger'));
 
     dispatch({
       type: COMMENT_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: error.statusText, status: error.status },
     });
+    return {success: false};
   }
 };
 
@@ -56,13 +63,15 @@ export const deleteComment = (CommentId) => async (dispatch) => {
       payload: CommentId,
     });
 
-    dispatch(setAlert(res.data.message, "success"));
+    dispatch(setAlert(res.data.message || 'Comment deleted successfully.', 'success'));
   } catch (err) {
-    dispatch(setAlert(err.response.data.message, "danger"));
+    const error = getApiError(err, 'Unable to delete this comment. Please try again.');
+
+    dispatch(setAlert(error.message, "danger"));
 
     dispatch({
       type: COMMENT_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: error.statusText, status: error.status },
     });
   }
 };

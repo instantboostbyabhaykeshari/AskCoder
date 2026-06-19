@@ -1,8 +1,9 @@
+'use client';
+
 import React from "react";
 
 import TagBadge from "../../../components/molecules/TagBadge/TagBadge.component";
 
-import './UserActivity.styles.scss';
 
 const UserActivity = () => (
   <div className='grid-cell2'>

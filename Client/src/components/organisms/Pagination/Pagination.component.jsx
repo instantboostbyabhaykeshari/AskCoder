@@ -1,3 +1,5 @@
+'use client';
+
 import React, { Fragment } from "react";
 import { Pagination as MuiPagination, PaginationItem } from "@mui/material";
 

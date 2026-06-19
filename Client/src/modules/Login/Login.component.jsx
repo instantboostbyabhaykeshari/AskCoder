@@ -1,5 +1,7 @@
+'use client';
+
 import React, {Fragment} from 'react';
-import {Redirect} from 'react-router-dom';
+import {Redirect} from '../../next/nextRouterAdapter.js';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 

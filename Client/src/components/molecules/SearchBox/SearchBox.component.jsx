@@ -1,3 +1,5 @@
+'use client';
+
 import React, {Fragment} from 'react';
 import {ReactComponent as Search} from '../../../assets/Search.svg';
 

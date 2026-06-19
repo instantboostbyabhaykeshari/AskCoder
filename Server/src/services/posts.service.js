@@ -7,7 +7,7 @@ const {
   CommentsRepository,
   PostTagRepository,
   TagsRepository,
-} = require('../repositories');
+} = require('./data');
 
 exports.create = async (newPost, result) => {
   let transaction;
