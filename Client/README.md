@@ -31,9 +31,7 @@ This repo consists of the Frontend code of the project, the backend code is in _
 
 ## Guidelines to setup
 
-There are two ways to setup the project: manually or using the Dockerfile. Read below for more details:
-
-### Manual Setup
+### Local Setup
 
 1. Open your local CLI -
 
@@ -84,26 +82,7 @@ There are two ways to setup the project: manually or using the Dockerfile. Read 
 
 Let me know if you are interested and would want me to assign it to you
 
-### Docker Setup
-
-The back-end has support for Docker. So if you want to run the back-end in a container, you need do:
-
-- Setup environment variables in `.env` file. Note when you use Docker setup and run the database in localhost (host machine), you need to setup the environment variables for use correct IP of MySQL Database. Please, read [here](https://docs.docker.com/compose/environment-variables/) and [here](https://docs.docker.com/desktop/windows/networking/) for more details.
-
-- Build the Docker image:
-  ```
-  docker build -t stackoverflowclone .
-  ```
-- Run the container. For example, if you want to run the container in a new terminal, you can do:
-  ```
-  docker run -d -p 5000:5000 stackoverflowclone
-  ```
-
-The default port of api is 5000. After running the container, you can access the api by typing:
-
-    http://localhost:5000/api/<endpoint that you request - see next section>
-
-_Follow the steps properly (manual or Docker) and you are good to go._
+_Follow the steps above and you are good to go._
 
 ## Contributing
 
