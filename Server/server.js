@@ -4,7 +4,7 @@ const debug = require('debug')('backend:server');
 const app = require('./app');
 const portUtils = require('./src/config/port');
 
-const PORT = portUtils.normalizePort(process.env.PORT || '5000');
+const PORT = portUtils.normalizePort(process.env.PORT || '4000');
 app.set('port', PORT);
 
 const server = http.createServer(app);
