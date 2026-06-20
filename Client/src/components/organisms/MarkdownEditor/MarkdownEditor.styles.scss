@@ -15,10 +15,12 @@
         filter: invert(100%);
         -webkit-filter: invert(100%);
       }
+      background-color: black;
     }
     button.button-format.code-block {
       // code-block has not default icon in react-rte, so we gotta implement it on our own
       span {
+        // background-color: rgb(233, 48, 48);
         display: inline-block;
         width: 22px;
         height: 22px;

@@ -1,6 +1,7 @@
 'use client';
 
 import React, {Fragment} from 'react';
+import { Book } from "@deemlol/next-icons"
 
 
 const AskWidget = () => {
@@ -23,12 +24,7 @@ const AskWidget = () => {
               <button>
                 <div className='step-cell'>
                   <div>
-                    <img
-                      src='https://cdn.sstatic.net/Img/list-1.svg?v=e8dd475ba207'
-                      width='16'
-                      height='16'
-                      alt='1.'
-                    />
+                    <Book />
                   </div>
                   <span>Summarize the problem</span>
                 </div>
@@ -53,12 +49,7 @@ const AskWidget = () => {
               <button>
                 <div className='step-cell'>
                   <div>
-                    <img
-                      src='https://cdn.sstatic.net/Img/list-2.svg?v=9382fc2c3631'
-                      width='16'
-                      height='16'
-                      alt='2.'
-                    />
+                    <Book />
                   </div>
                   <span>Summarize the problem</span>
                 </div>
@@ -83,12 +74,7 @@ const AskWidget = () => {
               <button>
                 <div className='step-cell'>
                   <div>
-                    <img
-                      src='https://cdn.sstatic.net/Img/list-3.svg?v=323a95564232'
-                      width='16'
-                      height='16'
-                      alt='3.'
-                    />
+                    <Book />
                   </div>
                   <span>Summarize the problem</span>
                 </div>

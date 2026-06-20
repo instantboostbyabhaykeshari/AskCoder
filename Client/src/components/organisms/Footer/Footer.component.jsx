@@ -22,7 +22,7 @@ const Footer = () => (
         ))}
       </nav>
       <p className='footer__copyright'>
-        Copyright &copy; 2026 Abhay. All rights reserved.
+        Copyright &copy; 2026 Abhay Keshari. All rights reserved.
       </p>
     </div>
   </footer>
