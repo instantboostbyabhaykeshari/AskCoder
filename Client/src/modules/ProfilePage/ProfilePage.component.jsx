@@ -27,7 +27,7 @@ const ProfilePage = ({getProfile, user: {user, loading}, auth}) => {
     <Spinner type='page' width='75px' height='200px' />
   ) : (
     <Fragment>
-      <div id='mainbar' className='user-main-bar pl24 pt24'>
+      <div id='mainbar' className='user-main-bar'>
         <div className='user-card'>
           <UserSection user={user}/>
           {isOwnProfile && (

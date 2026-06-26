@@ -1,13 +1,24 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
-import ButtonGroup from '../../components/molecules/ButtonGroup/ButtonGroup.component';
+import React, { useMemo, useState, useEffect } from 'react';
+import BaseButton from '../../components/molecules/BaseButton/BaseButton.component';
 import EmptyState from '../../components/molecules/EmptyState/EmptyState.component';
 import { BLOG_CATEGORIES, blogPosts } from '../../data/blogPosts';
 import BlogCard from './BlogCard.component';
 
 const BlogPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize(); // Initialize on mount
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const filteredPosts = useMemo(() => {
     if (selectedCategory === 'All') {
@@ -16,6 +27,10 @@ const BlogPage = () => {
 
     return blogPosts.filter((post) => post.category === selectedCategory);
   }, [selectedCategory]);
+
+  const categoriesToShow = (isMobile && !isExpanded)
+    ? [...BLOG_CATEGORIES.slice(0, 3), 'More...']
+    : BLOG_CATEGORIES;
 
   return (
     <div id="mainbar" className="blog-page fc-black-800">
@@ -30,11 +45,22 @@ const BlogPage = () => {
       </header>
 
       <div className="blog-page__filters">
-        <ButtonGroup
-          buttons={BLOG_CATEGORIES}
-          selected={selectedCategory}
-          setSelected={setSelectedCategory}
-        />
+        <div className="blog-filters-container">
+          {categoriesToShow.map((category) => (
+            <BaseButton
+              key={category}
+              text={category}
+              selected={selectedCategory}
+              onClick={() => {
+                if (category === 'More...') {
+                  setIsExpanded(true);
+                } else {
+                  setSelectedCategory(category);
+                }
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       {filteredPosts.length === 0 ? (

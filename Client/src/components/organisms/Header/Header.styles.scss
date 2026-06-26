@@ -9,6 +9,8 @@
   border-bottom: 1px solid var(--ac-border-light);
   border-top: 3px solid var(--ac-orange);
   box-shadow: var(--ac-shadow);
+  display: flex;
+  justify-content: center;
 }
 
 .ac-header__inner {
