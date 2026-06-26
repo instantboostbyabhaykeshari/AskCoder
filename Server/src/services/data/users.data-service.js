@@ -83,6 +83,70 @@ exports.incrementViews = async (userId) => {
     });
 };
 
+// exports.retrieveOneWithCounts = async (id) => {
+//   let queryResult = await UsersModel.findOne({
+//     where: { id },
+//     attributes: [
+//       'id',
+//       'username',
+//       'gravatar',
+//       'views',
+//       'created_at',
+//       [Sequelize.literal('COUNT(DISTINCT(posts.id))'), 'posts_count'],
+//       [Sequelize.literal('COUNT(DISTINCT(tagname))'), 'tags_count'],
+//       [Sequelize.literal('COUNT(DISTINCT(answers.id))'), 'answers_count'],
+//       [Sequelize.literal('COUNT(DISTINCT(comments.id))'), 'comments_count'],
+//     ],
+//     include: [
+//       {
+//         required: false,
+//         model: PostsModel,
+//         attributes: [],
+//         include: {
+//           attributes: [],
+//           required: false,
+//           model: TagsModel,
+//         },
+//       },
+//       {
+//         attributes: [],
+//         required: false,
+//         model: AnswersModel,
+//       },
+//       {
+//         attributes: [],
+//         required: false,
+//         model: CommentsModel,
+//       },
+//     ],
+//     group: ['users.id'],
+//   })
+//     .catch((error) => {
+//       console.log(error);
+//       throw new Error('Something went wrong');
+//     });
+
+//   if (utils.conditional.isNull(queryResult)) {
+//     throw new Error('This user doesn\'t exists');
+//   }
+
+//   queryResult = utils.array.sequelizeResponse(
+//     queryResult,
+//     'id',
+//     'username',
+//     'gravatar',
+//     'views',
+//     'created_at',
+//     'posts_count',
+//     'tags_count',
+//     'answers_count',
+//     'comments_count',
+//   );
+
+//   return queryResult;
+// };
+
+
 exports.retrieveOneWithCounts = async (id) => {
   let queryResult = await UsersModel.findOne({
     where: { id },
@@ -99,35 +163,39 @@ exports.retrieveOneWithCounts = async (id) => {
     ],
     include: [
       {
-        required: false,
         model: PostsModel,
+        required: false,
         attributes: [],
-        include: {
-          attributes: [],
-          required: false,
-          model: TagsModel,
-        },
+        include: [
+          {
+            model: TagsModel,
+            required: false,
+            attributes: [],
+            through: {
+              attributes: [], // Prevent selecting posttag columns
+            },
+          },
+        ],
       },
       {
-        attributes: [],
-        required: false,
         model: AnswersModel,
+        required: false,
+        attributes: [],
       },
       {
-        attributes: [],
-        required: false,
         model: CommentsModel,
+        required: false,
+        attributes: [],
       },
     ],
     group: ['users.id'],
-  })
-    .catch((error) => {
-      console.log(error);
-      throw new Error('Something went wrong');
-    });
+  }).catch((error) => {
+    console.log(error);
+    throw new Error('Something went wrong');
+  });
 
   if (utils.conditional.isNull(queryResult)) {
-    throw new Error('This user doesn\'t exists');
+    throw new Error("This user doesn't exist");
   }
 
   queryResult = utils.array.sequelizeResponse(
@@ -143,9 +211,48 @@ exports.retrieveOneWithCounts = async (id) => {
     'comments_count',
   );
 
+  queryResult.top_tags = await exports.retrieveTopTags(id);
+
   return queryResult;
 };
 
+exports.retrieveTopTags = async (userId) => {
+  const queryResult = await TagsModel.findAll({
+    attributes: [
+      'id',
+      'tagname',
+      [Sequelize.fn('COUNT', Sequelize.col('posts.id')), 'posts_count'],
+    ],
+    include: [
+      {
+        model: PostsModel,
+        required: true,
+        attributes: [],
+        where: { user_id: userId },
+        through: {
+          attributes: [],
+        },
+      },
+    ],
+    group: ['tags.id', 'tags.tagname'],
+    order: [
+      [Sequelize.literal('posts_count'), 'DESC'],
+      ['tagname', 'ASC'],
+    ],
+    limit: 4,
+    subQuery: false,
+  }).catch((error) => {
+    console.log(error);
+    throw new Error('Something went wrong');
+  });
+
+  return queryResult.map((tag) => utils.array.sequelizeResponse(
+    tag,
+    'id',
+    'tagname',
+    'posts_count',
+  ));
+};
 exports.retrieveOne = async (params) => await UsersModel
   .findOne({
     where: params,

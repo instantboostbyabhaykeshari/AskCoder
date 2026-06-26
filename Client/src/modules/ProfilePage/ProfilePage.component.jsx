@@ -29,18 +29,6 @@ const ProfilePage = ({getProfile, user: {user, loading}, auth}) => {
     <Fragment>
       <div id='mainbar' className='user-main-bar pl24 pt24'>
         <div className='user-card'>
-          <div className='grid--cell s-navigation mb16'>
-            <Link
-              to='#'
-              className='s-navigation--item is-selected'
-              data-shortcut='P'
-            >
-              Profile
-            </Link>
-            <Link to='#' className='s-navigation--item' data-shortcut='A'>
-              Activity
-            </Link>
-          </div>
           <UserSection user={user}/>
           {isOwnProfile && (
             <div className='profile-settings-prompt s-card' role='note'>
@@ -67,7 +55,7 @@ const ProfilePage = ({getProfile, user: {user, loading}, auth}) => {
         </div>
         <div className='row-grid'>
           <ExternalUserDetails/>
-          <UserActivity/>
+          <UserActivity topTags={user.top_tags || []}/>
         </div>
       </div>
     </Fragment>

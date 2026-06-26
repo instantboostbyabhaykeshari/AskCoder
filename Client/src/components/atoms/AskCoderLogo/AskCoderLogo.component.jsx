@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { ASKCODER_LOGO_URL, logoSize } from '../../../config/logo';
 
 const AskCoderLogo = ({
-  width = 140,
+  width,
   height,
   className = '',
   priority = false,

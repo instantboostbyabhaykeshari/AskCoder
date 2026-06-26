@@ -22,7 +22,7 @@ const ExternalUserDetails = () => (
           <li className='item'>
             <Link to='/'>
               <span>
-                <AskCoderLogo width={54} className='logo' />
+                <AskCoderLogo width={200} className='logo' />
               </span>
               <span className='fc-blue-600 fs-body2'>
                 AskCoder

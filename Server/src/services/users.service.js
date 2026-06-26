@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 
 const { responseHandler, getJwtToken } = require('../helpers');
 const { UsersRepository } = require('./data');
+const chalk = require('chalk');
 
 exports.register = async (newUser, result) => {
   const salt = await bcrypt.genSalt(10);
@@ -64,6 +65,7 @@ exports.retrieveOne = async (id, result) => {
   await UsersRepository.incrementViews(id);
 
   const queryResult = await UsersRepository.retrieveOneWithCounts(id);
+  console.log(chalk.bgGreen("Query result", queryResult));
 
   return result(null, responseHandler(true, 200, 'Success', queryResult));
 };

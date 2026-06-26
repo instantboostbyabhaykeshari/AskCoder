@@ -1,8 +1,9 @@
 'use client';
+import { ReactComponent as GlobalIcon } from '../assets/Globe.svg';;
 
-import { ReactComponent as GlobalIcon } from '../assets/Globe.svg';
+const getUserProfileLink = (userId) => (userId ? `/users/${userId}` : '/login');
 
-export const mainNavItems = [
+export const getMainNavItems = (userId) => [
   {
     link: '/questions',
     icon: <GlobalIcon className='icon' />,
@@ -13,14 +14,16 @@ export const mainNavItems = [
     text: 'Tags',
   },
   {
-    link: '/users',
-    text: 'Users',
+    link: getUserProfileLink(userId),
+    text: 'Profile',
   },
   {
     link: '/blog',
     text: 'Blog',
   },
 ];
+
+export const mainNavItems = getMainNavItems();
 
 export const infoNavItems = [
   {

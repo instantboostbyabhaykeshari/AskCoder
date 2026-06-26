@@ -19,9 +19,9 @@ const AvatarCard = ({ id, gravatar, views }) => (
       </div>
       <div className='title'>
         <div className='grid fc-black-800'>
-          {views}
+          <span className="view">{views}</span>
           &nbsp;
-          <span className='fc-light'>PROFILE VIEWS</span>
+          <span className='view fc-black'>PROFILE VIEWS</span>
         </div>
       </div>
     </div>

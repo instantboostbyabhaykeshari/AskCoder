@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import { NavLink } from '../../../next/nextRouterAdapter.js';
 
 import AskCoderLogo from '../../atoms/AskCoderLogo/AskCoderLogo.component';
-import { mainNavItems, infoNavItems } from '../../../config/navigation';
+import { getMainNavItems, infoNavItems } from '../../../config/navigation';
 
 const SidebarUI = ({ isOpen, ...rest }) => {
   const classes = ['Sidebar', isOpen ? 'is-open' : ''];
@@ -55,7 +57,8 @@ const MobileSideBar = (props) => {
   const openSidebar = (isOp = true) => setIsOpen(isOp);
   const closeSidebar = () => setIsOpen(false);
 
-  const { hasOverlay, isRight } = props;
+  const { hasOverlay, isRight, auth } = props;
+  const mainNavItems = getMainNavItems(auth.user?.id);
 
   return (
     <SidebarUI isOpen={isOpen}>
@@ -103,4 +106,19 @@ const MobileSideBar = (props) => {
   );
 };
 
-export default MobileSideBar;
+MobileSideBar.propTypes = {
+  auth: PropTypes.object.isRequired,
+  hasOverlay: PropTypes.bool,
+  isRight: PropTypes.bool,
+};
+
+MobileSideBar.defaultProps = {
+  hasOverlay: false,
+  isRight: false,
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps)(MobileSideBar);

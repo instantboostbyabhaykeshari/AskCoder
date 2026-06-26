@@ -1,9 +1,12 @@
 import axios from 'axios';
+import chalk from "chalk";
+
 
 import {usersData as _usersData, profileData as _profileData} from './urls';
 
 export const usersData = () => {
   return axios.get(_usersData);
+  console.log(chalk.bgGreen("User Data", _usersData));
 };
 
 export const profileData = (id) => {

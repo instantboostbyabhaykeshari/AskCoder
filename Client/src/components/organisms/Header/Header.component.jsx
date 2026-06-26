@@ -63,7 +63,7 @@ const Header = ({auth: {isAuthenticated, loading, user}, logout}) => {
               <MobileSideBar hasOverlay />
             </div>
             <Link className='ac-header__brand' to='/'>
-              <AskCoderLogo width={140} className='full-logo' priority />
+              <AskCoderLogo width={170} className='full-logo' priority />
               <AskCoderLogo width={110} className='glyph-logo' />
             </Link>
           </div>

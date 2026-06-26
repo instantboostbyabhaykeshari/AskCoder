@@ -1,6 +1,7 @@
+const chalk = require("chalk");
 const { validationResult } = require('express-validator');
 const { responseHandler, asyncHandler } = require('../helpers');
-const { usersService } = require('../services');
+const { usersService } = require('../services/index.js');
 
 const User = (user) => ({
   username: user.username,
@@ -10,6 +11,7 @@ const User = (user) => ({
 exports.getOneUser = asyncHandler(async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(chalk.green("Abhay Id :", id));
 
     await usersService.retrieveOne(
       id,
@@ -22,6 +24,7 @@ exports.getOneUser = asyncHandler(async (req, res) => {
       },
     );
   } catch (err) {
+    console.log(chalk.green("User Data error:"));
     console.log(err);
     return res
       .status(500)
